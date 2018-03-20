@@ -55,7 +55,7 @@ static const int64 DUST_HARD_LIMIT = 1000;   // 0.00001 HGC mininput
 static const int64 MAX_MONEY = 1000000 * COIN;
 inline bool MoneyRange(int64 nValue) { return (nValue >= 0 && nValue <= MAX_MONEY); }
 /** Coinbase transaction outputs can only be spent after this number of new blocks (network rule) */
-static const int COINBASE_MATURITY = 10;
+static const int COINBASE_MATURITY = 5;
 /** Threshold for nLockTime: below this value it is interpreted as block number, otherwise as UNIX timestamp. */
 static const unsigned int LOCKTIME_THRESHOLD = 500000000; // Tue Nov  5 00:53:20 1985 UTC
 /** Maximum number of script-checking threads allowed */
@@ -623,8 +623,9 @@ public:
     static bool AllowFree(double dPriority)
     {
         // Large (in bytes) low-priority (new, small-coin) transactions
-        // need a fee.
-        return dPriority > COIN * 288 / 250;
+        // need a fee.r
+        // "Amount of blocks that are found withing difficulty period"
+        return dPriority > COIN * 1440 / 250;
     }
 
 // Apply the effects of this transaction on the UTXO set represented by view

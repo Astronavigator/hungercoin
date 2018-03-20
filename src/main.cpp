@@ -35,7 +35,7 @@ CTxMemPool mempool;
 unsigned int nTransactionsUpdated = 0;
 
 map<uint256, CBlockIndex*> mapBlockIndex;
-uint256 hashGenesisBlock("0x4b3cc3f17642c9b6b1b8d20c7ec1a0773091c8210aae1ac93374e72ee4da45cc");
+uint256 hashGenesisBlock("0x5074c1c4bed0855f1125409e66f76bad4704b9bb067ead28a5e8a0fcd5b1c595");
 static CBigNum bnProofOfWorkLimit(~uint256(0) >> 20); // Hungercoin: starting difficulty is 1 / 2^12
 CBlockIndex* pindexGenesisBlock = NULL;
 int nBestHeight = -1;
@@ -1087,15 +1087,15 @@ uint256 static GetOrphanRoot(const CBlockHeader* pblock)
 
 int64 static GetBlockValue(int nHeight, int64 nFees)
 {
-    int64 nSubsidy = 500 * COIN;
+    int64 nSubsidy = 100 * COIN;
 
     // Subsidy is cut in half every 840000 blocks, which will occur approximately every 4 years
-    nSubsidy >>= (nHeight / 1000); // Hungercoin: 840k blocks in ~4 years
+    nSubsidy >>= (nHeight / 5000); // Hungercoin: 840k blocks in ~4 years
 
     return nSubsidy + nFees;
 }
 
-static const int64 nTargetTimespan = 12 * 60 * 60; // Hungercoin: 12 hours
+static const int64 nTargetTimespan = 24 * 60 * 60; // Hungercoin: 24 hours
 static const int64 nTargetSpacing = 1 * 60; // Hungercoin: 1.0 minutes
 static const int64 nInterval = nTargetTimespan / nTargetSpacing;
 
@@ -2746,7 +2746,7 @@ bool LoadBlockIndex()
         pchMessageStart[1] = 0xc5;
         pchMessageStart[2] = 0xb5;
         pchMessageStart[3] = 0xd5;
-        hashGenesisBlock = uint256("0x6be59d3404aea764f18059a6a448467a50edde9415c07c912f3e57a1a504bd94");
+        hashGenesisBlock = uint256("0x33fa9ee8fdf9357cdce597f4bffd748c881df0b4f906e0651810d41c7f368cba");
     }
 
     //
@@ -2779,7 +2779,7 @@ bool InitBlockIndex() {
         //   vMerkleTree: 97ddfbbae6
 
         // Genesis block
-        const char* pszTimestamp = "Ardisia crenata don't do well in extreme heat.";
+        const char* pszTimestamp = "Ardisia crenata don't do well in extreme heat";
         CTransaction txNew;
         txNew.vin.resize(1);
         txNew.vout.resize(1);
@@ -2791,21 +2791,22 @@ bool InitBlockIndex() {
         block.hashPrevBlock = 0;
         block.hashMerkleRoot = block.BuildMerkleTree();
         block.nVersion = 1;
-        block.nTime    = 1521028014;
+        block.nTime    = 1521546873;
         block.nBits    = 0x1e0ffff0;
-        block.nNonce   = 2086426908;
+        block.nNonce   = 387387168;
 
         if (fTestNet)
         {
-            block.nTime    = 1521027995;
-            block.nNonce   = 386010670;
+            block.nTime    = 1521546856;
+            block.nNonce   = 386852325;
         }
 
          // HUNGER COIN
         printf("Started");
 /////////////////////////////////// ----------------------------------------------- //////////////////////////////////
 
-        if (false && block.GetHash() != hashGenesisBlock)
+
+        if (true && block.GetHash() != hashGenesisBlock)
         {
             printf("Searching for genesis block...\n");
             // This will figure out a valid hash and Nonce if you're
@@ -2855,7 +2856,7 @@ bool InitBlockIndex() {
         printf("%s\n", hash.ToString().c_str());
         printf("%s\n", hashGenesisBlock.ToString().c_str());
         printf("%s\n", block.hashMerkleRoot.ToString().c_str());
-        assert(block.hashMerkleRoot == uint256("0x4d623187de613a1771543a3f9278619edc4a99b8536fcf6ac23944ea5a69cde7"));
+        assert(block.hashMerkleRoot == uint256("0xbb04523bf4db7c5330f7c1c22127e46cd462d24cd4c1cf414d5e687a66ab2a0f"));
         block.print();
         assert(hash == hashGenesisBlock);
 
