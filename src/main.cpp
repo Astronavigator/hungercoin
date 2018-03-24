@@ -35,8 +35,8 @@ CTxMemPool mempool;
 unsigned int nTransactionsUpdated = 0;
 
 map<uint256, CBlockIndex*> mapBlockIndex;
-uint256 hashGenesisBlock("0x5074c1c4bed0855f1125409e66f76bad4704b9bb067ead28a5e8a0fcd5b1c595");
-static CBigNum bnProofOfWorkLimit(~uint256(0) >> 20); // Hungercoin: starting difficulty is 1 / 2^12
+uint256 hashGenesisBlock("0x5b07b686c4bfdce21ba0e754a9b86b4b8fe9001fc00a844e4f867f8ce0fea4c7");
+static CBigNum bnProofOfWorkLimit(~uint256(0) >> 18); // Hungercoin: starting difficulty is 1 / 2^8
 CBlockIndex* pindexGenesisBlock = NULL;
 int nBestHeight = -1;
 uint256 nBestChainWork = 0;
@@ -1087,15 +1087,15 @@ uint256 static GetOrphanRoot(const CBlockHeader* pblock)
 
 int64 static GetBlockValue(int nHeight, int64 nFees)
 {
-    int64 nSubsidy = 100 * COIN;
+    int64 nSubsidy = 250 * COIN;
 
     // Subsidy is cut in half every 840000 blocks, which will occur approximately every 4 years
-    nSubsidy >>= (nHeight / 5000); // Hungercoin: 840k blocks in ~4 years
+    nSubsidy >>= (nHeight / 2000); // Hungercoin: 840k blocks in ~4 years
 
     return nSubsidy + nFees;
 }
 
-static const int64 nTargetTimespan = 24 * 60 * 60; // Hungercoin: 24 hours
+static const int64 nTargetTimespan = 2 * 60 * 60; // Hungercoin: 2 hours
 static const int64 nTargetSpacing = 1 * 60; // Hungercoin: 1.0 minutes
 static const int64 nInterval = nTargetTimespan / nTargetSpacing;
 
@@ -2746,7 +2746,7 @@ bool LoadBlockIndex()
         pchMessageStart[1] = 0xc5;
         pchMessageStart[2] = 0xb5;
         pchMessageStart[3] = 0xd5;
-        hashGenesisBlock = uint256("0x33fa9ee8fdf9357cdce597f4bffd748c881df0b4f906e0651810d41c7f368cba");
+        hashGenesisBlock = uint256("0xd4e62cab35d284daacf0b1bc21906f0439d984607c250be7f85d71a5227aefe3");
     }
 
     //
@@ -2791,14 +2791,16 @@ bool InitBlockIndex() {
         block.hashPrevBlock = 0;
         block.hashMerkleRoot = block.BuildMerkleTree();
         block.nVersion = 1;
-        block.nTime    = 1521546873;
-        block.nBits    = 0x1e0ffff0;
-        block.nNonce   = 387387168;
+        block.nTime    = 1521715460;
+        // block.nBits    = 0x1e0ffff0; original
+        // block.nBits    = 0x1e00ffff; first try
+        block.nBits    = 0x1e3fffff; // second try
+        block.nNonce   = 388580993;
 
         if (fTestNet)
         {
-            block.nTime    = 1521546856;
-            block.nNonce   = 386852325;
+            block.nTime    = 1521715445;
+            block.nNonce   = 389104088;
         }
 
          // HUNGER COIN
@@ -2856,6 +2858,8 @@ bool InitBlockIndex() {
         printf("%s\n", hash.ToString().c_str());
         printf("%s\n", hashGenesisBlock.ToString().c_str());
         printf("%s\n", block.hashMerkleRoot.ToString().c_str());
+        printf("\n\n **** min nBit:  %08x \n\n", bnProofOfWorkLimit.GetCompact());
+
         assert(block.hashMerkleRoot == uint256("0xbb04523bf4db7c5330f7c1c22127e46cd462d24cd4c1cf414d5e687a66ab2a0f"));
         block.print();
         assert(hash == hashGenesisBlock);
